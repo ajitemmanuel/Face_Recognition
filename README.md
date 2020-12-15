@@ -64,6 +64,8 @@ The triplet loss function formalizes this, and tries to "push" the encodings of 
     
 
 
+
+
 ### 1.2 - The Triplet Loss
 
 For an image $x$, we denote its encoding $f(x)$, where $f$ is the function computed by the neural network.
@@ -96,6 +98,8 @@ Notes:
 - The term (1) is the squared distance between the anchor "A" and the positive "P" for a given triplet; we want this to be small. 
 - The term (2) is the squared distance between the anchor "A" and the negative "N" for a given triplet, we want this to be relatively large. It has a minus sign preceding it because minimizing the negative of the term is the same as maximizing that term.
 - $\alpha$ is called the margin. It is a hyperparameter that you pick manually. We will use $\alpha = 0.2$. 
+
+
 
 ## 2 - Loading the pre-trained model
 
