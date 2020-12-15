@@ -20,7 +20,7 @@ FaceNet learns a neural network that encodes a face image into a vector of 128 n
 #### Channels-first notation
 
 * In this assignment, I will be using a pre-trained model which represents ConvNet activations using a **"channels first"** convention, as opposed to the "channels last" . 
-* In other words, a batch of images will be of shape $(m, n_C, n_H, n_W)$ instead of $(m, n_H, n_W, n_C)$. 
+* In other words, a batch of images will be of shape  (m, n_C, n_H, n_W)  instead of  (m, n_H, n_W, n_C) . 
 * Both of these conventions have a reasonable amount of traction among open-source implementations; there isn't a uniform standard yet within the deep learning community. 
 
 ## 0 - Naive Face Verification
@@ -32,7 +32,7 @@ In Face Verification, given two images and we have to determine if they are of t
     
     
 * Of course, this algorithm performs really poorly, since the pixel values change dramatically due to variations in lighting, orientation of the person's face, even minor changes in head position, and so on. 
-* We'll see that rather than using the raw image, we can learn an encoding, $f(img)$.  
+* We'll see that rather than using the raw image, we can learn an encoding, f(img).  
 * By using an encoding for each image, an element-wise comparison produces a more accurate judgement as to whether two pictures are of the same person.
 
 ## 1 - Encoding face images into a 128-dimensional vector 
@@ -43,8 +43,8 @@ The FaceNet model takes a lot of data and a long time to train. So following com
 
 The key things we need to know are:
 
-- This network uses 96x96 dimensional RGB images as its input. Specifically, inputs a face image (or batch of $m$ face images) as a tensor of shape $(m, n_C, n_H, n_W) = (m, 3, 96, 96)$ 
-- It outputs a matrix of shape $(m, 128)$ that encodes each input face image into a 128-dimensional vector
+- This network uses 96x96 dimensional RGB images as its input. Specifically, inputs a face image (or batch of  m  face images) as a tensor of shape  (m, n_C, n_H, n_W) = (m, 3, 96, 96)  
+- It outputs a matrix of shape  (m, 128)  that encodes each input face image into a 128-dimensional vector
 
 By using a 128-neuron fully connected layer as its last layer, the model ensures that the output is an encoding vector of size 128. We then use the encodings to compare two face images as follows:
 
@@ -68,37 +68,23 @@ The triplet loss function formalizes this, and tries to "push" the encodings of 
 
 ### 1.2 - The Triplet Loss
 
-For an image $x$, we denote its encoding $f(x)$, where $f$ is the function computed by the neural network.
+For an image x , we denote its encoding  f(x) , where  f  is the function computed by the neural network.
 
 <img src="images/f_x.png" style="width:380px;height:150px;">
 
 <!--
-We will also add a normalization step at the end of our model so that $\mid \mid f(x) \mid \mid_2 = 1$ (means the vector of encoding should be of norm 1).
+We will also add a normalization step at the end of our model so that  \mid \mid f(x) \mid \mid_2 = 1  (means the vector of encoding should be of norm 1).
 !-->
 
-Training will use triplets of images $(A, P, N)$:  
+Training will use triplets of images  (A, P, N) :  
 
 - A is an "Anchor" image--a picture of a person. 
 - P is a "Positive" image--a picture of the same person as the Anchor image.
 - N is a "Negative" image--a picture of a different person than the Anchor image.
 
-These triplets are picked from our training dataset. We will write $(A^{(i)}, P^{(i)}, N^{(i)})$ to denote the $i$-th training example. 
-
-We would like to make sure that an image $A^{(i)}$ of an individual is closer to the Positive $P^{(i)}$ than to the Negative image $N^{(i)}$) by at least a margin $\alpha$:
-
-$$\mid \mid f(A^{(i)}) - f(P^{(i)}) \mid \mid_2^2 + \alpha < \mid \mid f(A^{(i)}) - f(N^{(i)}) \mid \mid_2^2$$
+These triplets are picked from our training dataset. 
 
 We would thus like to minimize the following "triplet cost":
-
-$$\mathcal{J} = \sum^{m}_{i=1} \large[ \small \underbrace{\mid \mid f(A^{(i)}) - f(P^{(i)}) \mid \mid_2^2}_\text{(1)} - \underbrace{\mid \mid f(A^{(i)}) - f(N^{(i)}) \mid \mid_2^2}_\text{(2)} + \alpha \large ] \small_+ \tag{3}$$
-
-Here, we are using the notation "$[z]_+$" to denote $max(z,0)$.  
-
-Notes:
-- The term (1) is the squared distance between the anchor "A" and the positive "P" for a given triplet; we want this to be small. 
-- The term (2) is the squared distance between the anchor "A" and the negative "N" for a given triplet, we want this to be relatively large. It has a minus sign preceding it because minimizing the negative of the term is the same as maximizing that term.
-- $\alpha$ is called the margin. It is a hyperparameter that you pick manually. We will use $\alpha = 0.2$. 
-
 
 
 ## 2 - Loading the pre-trained model
