@@ -23,3 +23,9 @@ FaceNet learns a neural network that encodes a face image into a vector of 128 n
 * In other words, a batch of images will be of shape $(m, n_C, n_H, n_W)$ instead of $(m, n_H, n_W, n_C)$. 
 * Both of these conventions have a reasonable amount of traction among open-source implementations; there isn't a uniform standard yet within the deep learning community. 
 
+## 0 - Naive Face Verification
+
+In Face Verification, given two images and we have to determine if they are of the same person. The simplest way to do this is to compare the two images pixel-by-pixel. If the distance between the raw images are less than a chosen threshold, it may be the same person! 
+
+<img src="images/pixel_comparison.png" style="width:380px;height:150px;">
+<caption><center> <u> <font color='purple'> **Figure 1** </u></center></caption>
